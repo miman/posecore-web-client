@@ -1,3 +1,19 @@
+**Project prerequisites**
+
+You must install the Parcel pacakge manager.
+
+run this command:
+npm install -g parcel-bundler
+
+**Run the project**
+
+**parcel index.html** will start the server at port 1234
+
+**Build a deployment package**
+
+Run **parcel build index.html**
+
+
 **Edit a file, create a new file, and clone from Bitbucket in under 2 minutes**
 
 When you're done, you can delete the content in this README and update the file with details for others getting started with your repository.
