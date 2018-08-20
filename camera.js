@@ -23,7 +23,7 @@ import {
   drawBoundingBox
 } from './demo_util';
 
-import WebSocketRedux from './websocket';
+import WebSocketRedux from './websocket/websocket';
 
 import {POSE_SRV_INITILIZED, POSE_UPDATE} from './api/msg_types';
 

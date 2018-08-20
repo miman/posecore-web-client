@@ -1,5 +1,5 @@
-import {WS_CLIENT_CONNECTED} from './api/msg_types';
-import ClientConnectedMsg from './api/client_connected_msg';
+import {WS_CLIENT_CONNECTED} from '../api/msg_types';
+import ClientConnectedMsg from '../api/client_connected_msg';
 const uuidv4 = require('uuid/v4');
 
 /**
