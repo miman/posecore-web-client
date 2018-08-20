@@ -25,6 +25,10 @@ import {
 
 import WebSocketRedux from './websocket';
 
+import {POSE_SRV_INITILIZED, POSE_UPDATE} from './api/msg_types';
+
+
+
 const videoWidth = 600;
 const videoHeight = 500;
 const stats = new Stats();
@@ -330,10 +334,10 @@ export async function bindPage() {
 
 function sendPoseServerInitialized() {
   var msg = {
-    type: 'POSE_SRV_INITILIZED',
+    type: POSE_SRV_INITILIZED,
     payload: guiState
   };
-  ws.sendMsg(JSON.stringify(msg));
+  ws.sendMsg(msg);
 }
 
 function sendPoseUpdateToSrv(poses) {
@@ -351,10 +355,10 @@ function sendPoseUpdateToSrv(poses) {
 
   // Return the result with highest probability
   var msg = {
-    type: 'POSE_UPDATE',
+    type: POSE_UPDATE,
     payload: poses[maxProbabilityIndex]
   };
-  ws.sendMsg(JSON.stringify(msg));
+  ws.sendMsg(msg);
 }
 
 
