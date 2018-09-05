@@ -23,17 +23,15 @@ import {
   drawBoundingBox
 } from './demo_util';
 
-import WebSocketRedux from './websocket/websocket';
+import WebSocketConnection from './websocket/websocket';
 
 import {POSE_SRV_INITILIZED, POSE_UPDATE} from './api/msg_types';
-
-
 
 const videoWidth = 600;
 const videoHeight = 500;
 const stats = new Stats();
 
-var ws = new WebSocketRedux();
+let ws = new WebSocketConnection();
 ws.initializeSocket('ws://localhost:8111');
 
 function isAndroid() {

@@ -1,19 +1,22 @@
-import {WS_CLIENT_CONNECTED} from '../api/msg_types';
+import {
+  WS_CLIENT_CONNECTED
+} from '../api/msg_types';
 import ClientConnectedMsg from '../api/client_connected_msg';
 const uuidv4 = require('uuid/v4');
 
 /**
- * This is a websocket class that takes messages from the web-socket & dispatches them according to redux actions.
- * There is also a send function to send msgs on the websocket.
+ * This is a websocket class that Implements the logic according for thsi connection to the server.
  */
-class WebSocketRedux {
+class WebSocketConnection {
   /**
    * Constructor
-   * @param {The dispatch function for redux} dispatch
    */
   constructor() {
     this.socket = null;
-    this.clientId = uuidv4();
+    this.clientId = 'POSENET_CLIENT_' + uuidv4();
+
+    this.sendMsg = this.sendMsg.bind(this);
+    this.sendClientConnected = this.sendClientConnected.bind(this);
   };
 
   /**
@@ -40,8 +43,8 @@ class WebSocketRedux {
    * called when the websocket connection is established
    */
   onSocketOpen() {
-     console.log('Websocket connected');
-      this.sendClientConnected();
+    console.log('Websocket connected');
+    this.sendClientConnected();
   }
 
   /**
@@ -55,9 +58,12 @@ class WebSocketRedux {
     //        this.dispatch(data);
   }
 
+  /**
+   * This function sends a Client connected message to the server.
+   */
   sendClientConnected() {
     var ccMsg = new ClientConnectedMsg(this.clientId);
-  
+
     var msg = {
       type: WS_CLIENT_CONNECTED,
       payload: ccMsg
@@ -66,4 +72,4 @@ class WebSocketRedux {
   }
 }
 
-export default WebSocketRedux;
+export default WebSocketConnection;
