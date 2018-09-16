@@ -32,7 +32,8 @@ const videoHeight = 500;
 const stats = new Stats();
 
 let ws = new WebSocketConnection();
-ws.initializeSocket('ws://localhost:8111');
+// ws.initializeSocket('ws://localhost:8111');
+ws.initializeSocket('wss://posesrv.thorman.eu/ws/');
 
 function isAndroid() {
   return /Android/i.test(navigator.userAgent);
