@@ -27,13 +27,22 @@ import WebSocketConnection from './websocket/websocket';
 
 import {POSE_SRV_INITILIZED, POSE_UPDATE} from './api/msg_types';
 
+import MqttConnection from "./websocket/mqtt-client";
+
+const uuidv4 = require('uuid/v4');
+
 const videoWidth = 600;
 const videoHeight = 500;
 const stats = new Stats();
 
-let ws = new WebSocketConnection();
+const deviceId = "WebClient_1";
+
+let mqttClient = new MqttConnection("POSE_CLIENT_" + uuidv4());
+mqttClient.connectToMqttSrv("mqtt://mqtt.thorman.eu:8883");
+
+//let ws = new WebSocketConnection();
 // ws.initializeSocket('ws://localhost:8111');
-ws.initializeSocket('wss://posesrv.thorman.eu/ws/');
+// ws.initializeSocket('wss://posesrv.thorman.eu/ws/');
 
 function isAndroid() {
   return /Android/i.test(navigator.userAgent);
@@ -336,7 +345,8 @@ function sendPoseServerInitialized() {
     type: POSE_SRV_INITILIZED,
     payload: guiState
   };
-  ws.sendMsg(msg);
+//  ws.sendMsg(msg);
+  mqttClient.sendMsg(msg, "posetracking/${ClientId}/" + deviceId + "/${SessionId}/pose-settings");
 }
 
 function sendPoseUpdateToSrv(poses) {
@@ -357,7 +367,8 @@ function sendPoseUpdateToSrv(poses) {
     type: POSE_UPDATE,
     payload: poses[maxProbabilityIndex]
   };
-  ws.sendMsg(msg);
+//  ws.sendMsg(msg);
+  mqttClient.sendMsg(msg, "posetracking/${ClientId}/" + deviceId + "/${SessionId}/pose-event");
 }
 
 
