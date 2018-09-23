@@ -25,6 +25,7 @@ import {
 
 import WebSocketConnection from './websocket/websocket';
 import PoseEvent from './api/pose_event';
+import MsgHeader from './api/msg_header';
 
 import {POSE_SRV_INITILIZED, POSE_UPDATE} from './api/msg_types';
 
@@ -36,16 +37,25 @@ const videoWidth = 600;
 const videoHeight = 500;
 const stats = new Stats();
 
+const useMqtt = false;
+const useWebsocket = true;
+
 const deviceId = "WebClient_1";
+let mqttClient = null;
+if (useMqtt) {
+  mqttClient = new MqttConnection('POSE_CLIENT_' + uuidv4());
+  mqttClient.username = 'TODO';
+  mqttClient.password = 'TODO';
+  mqttClient.connectToMqttSrv('mqtt://mqtt.thorman.eu:8883');
+}
 
-let mqttClient = new MqttConnection('POSE_CLIENT_' + uuidv4());
-mqttClient.username = 'TODO';
-mqttClient.password = 'TODO';
-mqttClient.connectToMqttSrv('mqtt://mqtt.thorman.eu:8883');
-
-//let ws = new WebSocketConnection();
+let ws = null;
+if (useWebsocket) {
+  ws = new WebSocketConnection();
 // ws.initializeSocket('ws://localhost:8111');
-// ws.initializeSocket('wss://posesrv.thorman.eu/ws/');
+   ws.initializeSocket('wss://posesrv.thorman.eu/ws/');
+}
+
 
 function isAndroid() {
   return /Android/i.test(navigator.userAgent);
@@ -344,12 +354,18 @@ export async function bindPage() {
 }
 
 function sendPoseServerInitialized() {
-  var msg = {
-    type: POSE_SRV_INITILIZED,
-    payload: guiState
-  };
-//  ws.sendMsg(msg);
-  mqttClient.sendMsg(msg, "posetracking/${ClientId}/" + deviceId + "/${SessionId}/pose-settings");
+  let msg = new MsgHeader();
+  msg.type = 'POSE_SRV_INITILIZED';
+  msg.version = 1.0;
+  msg.payload = guiState;
+
+  if (useWebsocket) {
+    ws.sendMsg(msg);
+  }
+
+  if (useMqtt) {
+    mqttClient.sendMsg(msg, "posetracking/${ClientId}/" + deviceId + "/${SessionId}/pose-settings");
+  }
 }
 
 function sendPoseUpdateToSrv(poses) {
@@ -365,14 +381,20 @@ function sendPoseUpdateToSrv(poses) {
     i = i + 1;
   });
 
-  let poseEvent = convertPoseEvent(poses[maxProbabilityIndex]);
   // Return the result with highest probability
-  var msg = {
-    type: POSE_UPDATE,
-    payload: poseEvent
-  };
-//  ws.sendMsg(msg);
-  mqttClient.sendMsg(msg, "posetracking/${ClientId}/" + deviceId + "/${SessionId}/pose-event");
+  let poseEvent = convertPoseEvent(poses[maxProbabilityIndex]);
+  let msg = new MsgHeader();
+  msg.type = 'POSE_UPDATE';
+  msg.version = 1.0;
+  msg.payload = poseEvent;
+
+  if (useWebsocket) {
+    ws.sendMsg(msg);
+  }
+  
+  if (useMqtt) {
+    mqttClient.sendMsg(msg, "posetracking/${ClientId}/" + deviceId + "/${SessionId}/pose-event");
+  }
 }
 
 function convertPoseEvent(event) {
