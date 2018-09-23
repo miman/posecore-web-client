@@ -24,6 +24,7 @@ import {
 } from './demo_util';
 
 import WebSocketConnection from './websocket/websocket';
+import PoseEvent from './api/pose_event';
 
 import {POSE_SRV_INITILIZED, POSE_UPDATE} from './api/msg_types';
 
@@ -37,8 +38,10 @@ const stats = new Stats();
 
 const deviceId = "WebClient_1";
 
-let mqttClient = new MqttConnection("POSE_CLIENT_" + uuidv4());
-mqttClient.connectToMqttSrv("mqtt://mqtt.thorman.eu:8883");
+let mqttClient = new MqttConnection('POSE_CLIENT_' + uuidv4());
+mqttClient.username = 'TODO';
+mqttClient.password = 'TODO';
+mqttClient.connectToMqttSrv('mqtt://mqtt.thorman.eu:8883');
 
 //let ws = new WebSocketConnection();
 // ws.initializeSocket('ws://localhost:8111');
@@ -362,13 +365,58 @@ function sendPoseUpdateToSrv(poses) {
     i = i + 1;
   });
 
+  let poseEvent = convertPoseEvent(poses[maxProbabilityIndex]);
   // Return the result with highest probability
   var msg = {
     type: POSE_UPDATE,
-    payload: poses[maxProbabilityIndex]
+    payload: poseEvent
   };
 //  ws.sendMsg(msg);
   mqttClient.sendMsg(msg, "posetracking/${ClientId}/" + deviceId + "/${SessionId}/pose-event");
+}
+
+function convertPoseEvent(event) {
+  var poseEvent = new PoseEvent();
+  event.keypoints.forEach(elem => {
+      if (elem.part === 'leftAnkle') {
+          poseEvent.leftAnkle = elem.position;
+      } else if (elem.part === 'rightAnkle') {
+          poseEvent.rightAnkle = elem.position;
+      }if (elem.part === 'leftEar') {
+          poseEvent.leftEar = elem.position;
+      }if (elem.part === 'rightEar') {
+          poseEvent.rightEar = elem.position;
+      }if (elem.part === 'leftElbow') {
+          poseEvent.leftElbow = elem.position;
+      }if (elem.part === 'rightElbow') {
+          poseEvent.rightElbow = elem.position;
+      }if (elem.part === 'leftEye') {
+          poseEvent.leftEye = elem.position;
+      }if (elem.part === 'rightEye') {
+          poseEvent.rightEye = elem.position;
+      }if (elem.part === 'leftHip') {
+          poseEvent.leftHip = elem.position;
+      }if (elem.part === 'rightHip') {
+          poseEvent.rightHip = elem.position;
+      }if (elem.part === 'leftKnee') {
+          poseEvent.leftKnee = elem.position;
+      }if (elem.part === 'rightKnee') {
+          poseEvent.rightKnee = elem.position;
+      } if (elem.part === 'leftShoulder') {
+          poseEvent.leftShoulder = elem.position;
+      } if (elem.part === 'rightShoulder') {
+          poseEvent.rightShoulder = elem.position;
+      } if (elem.part === 'leftWrist') {
+          poseEvent.leftWrist = elem.position;
+      } if (elem.part === 'rightWrist') {
+          poseEvent.rightWrist = elem.position;
+      } if (elem.part === 'nose') {
+          poseEvent.nose = elem.position;
+      } if (elem.part === 'tightAnkle') {
+          poseEvent.tightAnkle = elem.position;
+      }
+  });
+  return poseEvent;
 }
 
 

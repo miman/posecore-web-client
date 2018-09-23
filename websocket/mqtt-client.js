@@ -20,6 +20,8 @@ import {
       this.mqttClient = null;
       this.clientId = clientId;
       this.sessionId = uuidv4();
+      this.username = null;
+      this.password = null;
   
       this.sendMsg = this.sendMsg.bind(this);
       this.sendClientConnected = this.sendClientConnected.bind(this);
@@ -37,11 +39,17 @@ import {
      * @param {The  client id} id
      */
     connectToMqttSrv(url) {
-      this.mqttClient = Client.connect(url,{clientId:this.clientId});
+
+      let options = {clientId: this.clientId};
+      if (this.username != null) {
+        options.username = this.username;
+        options.password = this.password;
+      }
+      this.mqttClient = Client.connect(url, options);
   
       // Initialize handlers
-      this.mqttClient.on("connect", this.onConnectedToMqttSrv.bind(this));
-      this.mqttClient.on("message", this.onMessage.bind(this));
+      this.mqttClient.on('connect', this.onConnectedToMqttSrv.bind(this));
+      this.mqttClient.on('message', this.onMessage.bind(this));
     };
   
     /**
@@ -49,9 +57,11 @@ import {
      * @param {the messge to send} msg
      */
     sendMsg(msgObj, topic) {
-        let processedTopic = topic.replace("${ClientId}", this.clientId);
-        processedTopic = processedTopic.replace("${SessionId}", this.sessionId);
-        this.mqttClient.publish(processedTopic, JSON.stringify(msgObj), this.postOptions);
+        let processedTopic = topic.replace('${ClientId}', this.clientId);
+        processedTopic = processedTopic.replace('${SessionId}', this.sessionId);
+        let msgToSend = JSON.stringify(msgObj);
+        this.mqttClient.publish(processedTopic, msgToSend, this.postOptions);
+        console.log('MQTT-msg [' + msgToSend + '] sent on topic: ' + processedTopic);
     }
   
     /**
@@ -67,7 +77,7 @@ import {
      * @param {The received event} event
      */
     onMessage(topic, message, packet) {
-        console.log("MQTT-Msg received on topic [" + topic + "]: " + message);
+        console.log('MQTT-Msg received on topic [' + topic + ']: ' + message);
 
       const data = JSON.parse(message);
       console.log('received type: ' + data.type);
@@ -78,13 +88,13 @@ import {
      * This function sends a Client connected message to the server.
      */
     sendClientConnected() {
-      var ccMsg = new ClientConnectedMsg(this.clientId);
+      let ccMsg = new ClientConnectedMsg(this.clientId);
   
-      var msg = {
+      let msg = {
         type: WS_CLIENT_CONNECTED,
         payload: ccMsg
       };
-      this.sendMsg(msg, "posetracking/" + this.clientId + "/1/client/connected");
+      this.sendMsg(msg, 'posetracking/' + this.clientId + '/1/client/connected');
     }
   }
   
