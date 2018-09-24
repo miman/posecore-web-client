@@ -61,7 +61,7 @@ import {
         processedTopic = processedTopic.replace('${SessionId}', this.sessionId);
         let msgToSend = JSON.stringify(msgObj);
         this.mqttClient.publish(processedTopic, msgToSend, this.postOptions);
-        console.log('MQTT-msg [' + msgToSend + '] sent on topic: ' + processedTopic);
+//        console.log('MQTT-msg [' + msgToSend + '] sent on topic: ' + processedTopic);
     }
   
     /**
