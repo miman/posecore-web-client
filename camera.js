@@ -357,6 +357,7 @@ function sendPoseServerInitialized() {
   let msg = new MsgHeader();
   msg.type = 'POSE_SRV_INITILIZED';
   msg.version = 1.0;
+  msg.sendTime = Date.now();
   msg.payload = guiState;
 
   if (useWebsocket) {
@@ -386,6 +387,7 @@ function sendPoseUpdateToSrv(poses) {
   let msg = new MsgHeader();
   msg.type = 'POSE_UPDATE';
   msg.version = 1.0;
+  msg.sendTime = Date.now();
   msg.payload = poseEvent;
 
   if (useWebsocket) {

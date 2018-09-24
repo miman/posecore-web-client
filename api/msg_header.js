@@ -9,6 +9,7 @@ class MsgHeader {
     constructor(clientId) {
         this.type = null;
         this.version = null;
+        this.sendTime = null;
         this.payload = null;
     };
 }
