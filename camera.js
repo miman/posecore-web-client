@@ -37,8 +37,8 @@ const videoWidth = 600;
 const videoHeight = 500;
 const stats = new Stats();
 
-const useMqtt = false;
-const useWebsocket = true;
+const useMqtt = true;
+const useWebsocket = false;
 
 const deviceId = "WebClient_1";
 let mqttClient = null;
@@ -46,7 +46,7 @@ if (useMqtt) {
   mqttClient = new MqttConnection('POSE_CLIENT_' + uuidv4());
   mqttClient.username = 'TODO';
   mqttClient.password = 'TODO';
-  mqttClient.connectToMqttSrv('mqtt://mqtt.thorman.eu:8883');
+  mqttClient.connectToMqttSrv('mqtts://mqtt.thorman.eu/mqtt/');
 }
 
 let ws = null;
