@@ -47,7 +47,7 @@ const uuidv4 = require('uuid/v4');
   
     sendPoseServerInitialized(guiState) {
         let msg = new MsgHeader();
-        msg.type = 'POSE_SRV_INITILIZED';
+        msg.type = POSE_SRV_INITILIZED;
         msg.version = 1.0;
         msg.sendTime = Date.now();
         msg.payload = guiState;
@@ -81,7 +81,7 @@ const uuidv4 = require('uuid/v4');
         }
         let poseEvent = this.convertPoseEvent(poses[maxProbabilityIndex]);
         let msg = new MsgHeader();
-        msg.type = 'POSE_UPDATE';
+        msg.type = POSE_UPDATE;
         msg.version = 1.0;
         msg.sendTime = Date.now();
         msg.payload = poseEvent;
