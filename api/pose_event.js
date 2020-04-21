@@ -9,6 +9,7 @@ class PoseEvent {
      */
     constructor(clientId) {
         this.nose = null;
+        this.head = null;
         this.leftEye = null;
         this.rightEye = null;
         this.leftEar = null;
@@ -19,12 +20,18 @@ class PoseEvent {
         this.rightElbow = null;
         this.leftWrist = null;
         this.rightWrist = null;
+        this.root = null;
         this.leftHip = null;
         this.rightHip = null;
         this.leftKnee = null;
         this.rightKnee = null;
-        this.leftAnkle = null;
-        this.rightAnkle = null;
+        this.leftFoot = null;
+        this.rightFoot = null;
+
+        /**
+         * TheTo identify the body if there are several visible
+         */
+        this.bodyId = null;
     };
 }
 
