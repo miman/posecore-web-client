@@ -138,20 +138,28 @@ class MqttConnection {
    * @param {The  URL to the MQTT srv} url
    * @param {The  client id} id
    */
-  connectToMqttSrv(url, connectedCallback) {
+  connectToMqttSrv(url, useWss, connectedCallback) {
     console.log('Connecting to MQTT-srv: ' + url);
 //    process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = 0;
     this.connectedCallback = connectedCallback;
     this.mqttUrl = url;
 
-    let options = {
-      clientId: this.clientId,
-      ca: SECURE_CA,
-      key: SECURE_KEY,
-      cert: SECURE_CERT,
-      rejectUnauthorized: false,
-      agent: false
-    };
+    let options = null;
+    if (useWss) {
+      options = {
+        clientId: this.clientId,
+        ca: SECURE_CA,
+        key: SECURE_KEY,
+        cert: SECURE_CERT,
+        rejectUnauthorized: false,
+        agent: false
+      };
+    } else {
+      options = {
+        clientId: this.clientId
+      };      
+    }
+
     if (this.username != null) {
       options.username = this.username;
       options.password = this.password;

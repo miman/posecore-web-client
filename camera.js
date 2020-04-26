@@ -22,11 +22,21 @@ import {drawBoundingBox, drawKeypoints, drawSkeleton, isMobile, toggleLoadingUI,
 
 import PoseSrvProxy from './websocket/pose-srv-proxy';
 
+function getUrlParameter(param) {
+  console.log("window.location.href: " + window.location.href);
+  let n = window.location.href.indexOf(param);
+  let usews = window.location.href.substring(n + param.length + 1);
+  console.log("usews: " + usews);
+  return usews;
+}
+
 function poseSrvConnectedCallback() {
   console.log("Connected to MQTT srv")
 }
 
-let poseProxy = new PoseSrvProxy('PosnetClient', poseSrvConnectedCallback);
+let useWss = getUrlParameter('usewss') === 'true';
+
+let poseProxy = new PoseSrvProxy('PosnetClient', useWss, poseSrvConnectedCallback);
 poseProxy.connectToMqttSrv();
 
 const videoWidth = 600;

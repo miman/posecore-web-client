@@ -15,8 +15,8 @@ const uuidv4 = require('uuid/v4');
 
 // mqttClient.subscribe("posetracking/user/device-id/pose-event", {qos:0});
 
-const localMqttUrl = 'wss://192.168.68.117:9443';
-// const localMqttUrl = 'mqtt://192.168.0.33:32768';
+const localWsMqttUrl = 'ws://192.168.68.117:9080';
+const localWssMqttUrl = 'wss://192.168.68.117:9443';
 
 /**
  * This is a websocket class that Implements the logic according for thsi connection to the server.
@@ -25,19 +25,23 @@ class PoseSrvProxy {
     /**
      * Constructor
      */
-    constructor(clientId) {
+    constructor(clientId, useWss, poseSrvConnectedCallback) {
         this.mqttClient = null;
         this.ws = null;
+        this.useWss = useWss;
 
         this.useMqtt = true;
         this.useWebsocket = false;
         this.videoWidth = 600;
         this.videoHeight = 500;
 
-        this.deviceId = 'PosenetClient';
-        this.clientId = 'local';
+        this.deviceId = 'PoseCore-WebClient';
+        this.clientId = clientId;
         this.poseSettingVersion = 1;
         this.poseEventVersion = 1;
+
+        // Use this to inform the client that the connection is open
+        this.poseSrvConnectedCallback = poseSrvConnectedCallback;
 
         this.sendPoseServerInitialized = this.sendPoseServerInitialized.bind(this);
         this.sendPoseUpdateToSrv = this.sendPoseUpdateToSrv.bind(this);
@@ -54,7 +58,11 @@ class PoseSrvProxy {
             this.mqttClient = new MqttConnection('POSE_CLIENT_' + uuidv4());
             this.mqttClient.username = '';
             this.mqttClient.password = '';
-            this.mqttClient.connectToMqttSrv(localMqttUrl);
+            if (this.useWss) {
+                this.mqttClient.connectToMqttSrv(localWssMqttUrl, this.useWss, this.poseSrvConnectedCallback);
+            } else {
+                this.mqttClient.connectToMqttSrv(localWsMqttUrl, this.useWss, this.poseSrvConnectedCallback);
+            }
         }
 
         if (this.useWebsocket) {

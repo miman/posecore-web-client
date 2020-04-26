@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>PoseNet Demos</title>
+    <title>PoseCore client using PoseNet</title>
   </head>
   <body>
-    <h1>PoseNet Demos</h1>
+    <h1>PoseCore client using PoseNet</h1>
     <ul>
-      <li><a href='camera.html'>Camera feed demo</a></li>
-      <li><a href='https://192.168.68.117:9443/ping'>HTTPS</a></li>
+      <li><a href='camera.html?usewss=true'>PoseCore client - over secure websocket</a></li>
+      <li><a href='camera.html?usewss=false'>PoseCore client - over websocket</a></li>
+      <li><a href='https://192.168.68.117:9443/ping'>HTTPS request (to get certificate question)</a></li>
     </ul>
   </body>
 </html>
