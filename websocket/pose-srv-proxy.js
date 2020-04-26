@@ -15,7 +15,7 @@ const uuidv4 = require('uuid/v4');
 
 // mqttClient.subscribe("posetracking/user/device-id/pose-event", {qos:0});
 
-const localMqttUrl = 'ws://localhost:8883';
+const localMqttUrl = 'wss://192.168.68.117:9443';
 // const localMqttUrl = 'mqtt://192.168.0.33:32768';
 
 /**
