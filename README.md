@@ -1,6 +1,7 @@
 # posecore-web-client
 
 This is a body sensor webclient to the PoseCore server.
+
 It uses the camera on the device you are using to capture the position of all body parts and send these to PoseCore clients over a PoseCore server.
 
 # Using the library
